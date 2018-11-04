@@ -4,15 +4,18 @@ import oleg.podolian.demo.model.Currency;
 import oleg.podolian.demo.service.CurrencyService;
 import oleg.podolian.demo.service.ParsingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.activation.MimeType;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,12 +40,13 @@ public class CurrencyController {
         return "Hello " + name;
     }
 
-    @PostMapping("/file/upload")
-    public void upload(@RequestBody MultipartFile file) {
+    @PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void upload(@RequestParam MultipartFile file) {
         if (file == null) {
             System.out.println("Not found");
 //        return ResponseEntity.ok();
         } else {
+            System.out.println(file.getOriginalFilename());
 //            boolean result = parsingService.parse(file)
             if (true) {
 //                return; ok
