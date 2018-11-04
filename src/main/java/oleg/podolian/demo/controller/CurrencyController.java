@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.activation.MimeType;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,12 +44,15 @@ public class CurrencyController {
     }
 
     @PostMapping(value = "/file/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void upload(@RequestParam MultipartFile file) {
-        if (file == null) {
+    public void upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        if (multipartFile == null) {
             System.out.println("Not found");
 //        return ResponseEntity.ok();
         } else {
-            System.out.println(file.getOriginalFilename());
+            File file = convert(multipartFile);
+
+            System.out.println("Files " + multipartFile.getOriginalFilename() + " exits: " + file.exists());
+            System.out.println(multipartFile.getOriginalFilename());
 //            boolean result = parsingService.parse(file)
             if (true) {
 //                return; ok
@@ -62,5 +68,14 @@ public class CurrencyController {
     public List<Currency> currencies(@PathVariable String bank) {
         return Collections.emptyList();
 //        return currencyService.fi
+    }
+
+    public static File convert(MultipartFile file) throws IOException {
+        File convFile = new File(file.getOriginalFilename());
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convFile;
     }
 }
